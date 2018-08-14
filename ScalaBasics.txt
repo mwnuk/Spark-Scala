@@ -1,0 +1,180 @@
+RDD: Resilient Distributed DataSet - 
+___________________________________________________
+       Collection of data partitioned accross machines logically
+2 ways to create RDD:
+ - val booksRDD  = sv.textFile("/path/to/books.txt") 
+ - val colorsRDD = sc.parallelize(List["red","blue"])
+Verify:
+   booksRDD.collect()
+   colorsRDD.collect()
+
+Basic RDD Transformations:
+___________________________________________________
+ Map - applies function to each element of the RDD
+ Filter - returns new RDD with elements passing a filter condition
+ FlatMap - applies function like map, but return multiple values for each element
+
+
+Example:
+val squareNumbersRDD = sc.parallelize(List(1,2,3,4))
+val squaredNumbers = numbersRDD.map(x=>x*x).collect()  - apply square to each element
+val filteredNumbers = numbersRDD.filter(x=>(x!=1)).collect()
+val linesRDD=sc.parallelize(List("Hello World","how are you")
+val wordRDD= linesRDD.flatmap(x=>x.split(" ")).collect()
+in Python:
+numbersRDD=sc.parallelize([1,2,3,4])
+squareNumbersRDD = numbersRDD.map(lambda x: x*x).collect()
+for s in squareNumbersRDD:
+	print(s)
+filteredumbersRDD= numbersRDD.filter(lambda x: (x!=1)).collect()
+for s in filteredNumbersRDD:
+	print(s)
+
+ACTIONS( when transformation is actualy computed- lazyly evaluated) :
+___________________________________________________
+filteredumbersRDD.count()
+filteredumbersRDD.first()
+filteredumbersRDD.take(2)
+
+LIST
+------------
+val events=List( 2,4,6,8,10,"a")
+events(0) returns 2
+events.head
+myList=List(List(1,2,3),List(4,5,6))
+mylist.max, min,sum
+events.drop(2)
+events.slice(3,2)
+
+ARRAYS (mutable), lists are more popular
+___________________________________________________
+val arr= Arry(1,2,3,"a")
+Array.range(0,10)
+Range(0,5)
+
+SETS( no duplicates, immutable or not, not ordered so no index)
+___________________________________________________
+val s=Set()  -empty immutable
+val s = Set(1,2,3)
+val s=collectio.mutable.Set(1,2,3)
+s+=4
+s.max
+
+
+MAPS(  key-value pairs, like dictionary)
+___________________________________________________
+val mymap = Map(("a",1),("b",2))
+mymap("a") - returns 1
+mymap get "a"  - same, but returns object
+val mymutmap=collection.mutable.Map(("x",1),("y",2))
+mymutmap+=("newkey" -> 999)
+mymutmaps.keys
+
+
+FOR
+___________________________________________________
+for(item <- List(1,2,3)) { println(item)...}
+for(item <- Set(1,2,3)) { println(item)...}; --may not be in order
+for(item <- Range(0,10)) { println(item)...};
+
+FUNCTIONS
+___________________________________________________
+def adder(num1:Int,num2:Int):Int= { return num1+num2 }
+def isPrime(numcheck:Int):Boolean = { for n<- Range(2,numcheck)){
+	if(numcheck%n==0){
+		return false
+	}}
+	return true}
+val numbers( = List(1,2,3,4)
+def check (num:List[Int]):List[Int]={return nums}
+ 
+DATA FRAMES
+___________________________________________________
+http://spark.apache.org/
+Spark is moving away from RDD syntax to spark Data frames
+Dataframe is a Dataset organized into named columns
+import org.apache.spark.sql.SparkSession
+val spark = SparkSession.builder().getOrCreate()
+val df = spark.read.csv("..")
+val df = spark.read.option("header","true").option("inferSchema","true").csv("Sales.csv")
+df.head(5)
+df.columns
+df.describe().show()  - min.max.stddev of all numerical columns
+df.select("Volume").show()
+df.select($"Date",$"Volume").show()  - multiple columns
+df.select(df("Date"),df("Volume").show()  - multiple columns
+val df2=df.withColumn("HighPlusLow",df("High)+df("Low"))  - creating new column
+df3.printSchema()
+df2("HighPlusLow").as("HPL") - renaming the column
+
+sparkSQL syntax or Scala notation
+import spark.implicits._
+df.filter($"Close">480 && $"High"<480).show()  - scala notation
+df.filter("Close>480 AND High >480").show()  - sql notation
+val CH_low = df.filter("Close>480 AND High >480").collect() - converts it array
+val CH_cnt = df.filter("Close>480 AND High >480").count()
+             transformation-action pattern
+Pearson correlation
+df.select(corr("High","Low")).show()
+Latest functions:
+http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$
+
+AGGREGATION
+___________________________________________________
+import org.apache.spark.sql.SparkSession
+val spark = SparkSession.builder().getOrCreate()
+val df = spark.read.option("header","true").option("inferSchema","true").csv("Sales.csv")
+df.groupBy("Company").mean().show()   -- min,max,sum,etc
+df.select(sum("Sales")).show()  -- all Sales column; variance,stddev,curtosis,etc
+
+MISSING DATA
+___________________________________________________
+null - 3 options; 1.keep them, 2. Drop them 3. Fill them in 
+df.na.drop().show() -- pass integer, drop rows that have less then a min numbr of non-null values
+df.na.fill(100).show() -- fills only number columns with 100
+df.na.fill('New NAme",Array(("Name")).show() -- fills only NAme column
+
+
+DATE AND TIME
+___________________________________________________
+df.select(month(df("Date"))).show() -- pass the column you want to process
+
+val df2=df.withColumn("Year",year(df("Date")))) -- pass entire column, not just name
+val dfavg=df.groupBy("Year").mean()             -- mean or max for all columns
+dfavg.selec($"Year,$"avg(Close)").show()        -- weird, need to repead the function
+
+
+MACHINE LEARNING 
+___________________________________________________
+
+Two ML APIs:
+-RDD API (outdated)
+-DataFrame API
+
+good documentation at:
+http:spark.apache.org/docs/latest/ml-guide.html
+
+Formatting means you convert all the columns of feature into a single column consisting of an array 
+of all those features
+
+next lecure is 47
+
+
+
+
+
+
+
+
+
+
+
+https://www.youtube.com/watch?v=HS8Cx-l9Vhg
+Spark SQL - Schema RDD, SQL with ODBC
+Spark Straming - 
+MLLib - Machine Learning lib
+GraphX - Graphical processing
+DAG: Direct Acyclic Graph
+Spark Context
+Transformations
+Actions

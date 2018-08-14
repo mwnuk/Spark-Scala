@@ -1,0 +1,42 @@
+set hive.exec.dynamic.partition=true;  
+set hive.exec.dynamic.partition.mode=nonstrict; 
+drop TABLE `Customers`;
+CREATE TABLE  IF NOT EXISTS `Customers`(
+  `iternum` int, 
+  `model` string,
+  `regionid` string,
+   `custNumber` string
+ )
+ PARTITIONED BY (processid int)
+STORED AS ORC;
+---------------------------------------
+set hive.exec.dynamic.partition=true; 
+set hive.exec.dynamic.partition.mode=nonstrict;  
+INSERT INto Customers partition (processid) values ( 1, 'mod1','f1','s1',222);
+INSERT INto Customers partition (processid) values ( 1, 'mod1','f2','s2',223);
+select * from Customers;
+
+---------------------------------------
+set hive.exec.dynamic.partition=true;  
+set hive.exec.dynamic.partition.mode=nonstrict;  
+drop table sv1;
+create table sv1(  
+  `model` string,
+  `regionid` string,
+   `custNumber` string
+ )
+PARTITIONED BY (processid int, iternum int)
+STORED AS ORC;
+---------------------------------------
+set hive.exec.dynamic.partition=true; 
+set hive.exec.dynamic.partition.mode=nonstrict;  
+INSERT INto sv1 partition (processid,iternum) 
+SELECT model, regionid, custNumber, processid,iternum from Customers;
+select * from sv1;
+
+
+
+
+
+
+
