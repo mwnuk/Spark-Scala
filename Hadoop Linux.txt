@@ -1,0 +1,15 @@
+upload jar to hdfs
+ 
+putty to Edge node
+initialize Knox
+kint user@domain
+
+bash - gives more options
+
+hadoop fs -ls /user/mydir    -list files
+hadoop fs -get /user/mydir/mufile.py  -copy from hdfs to node
+
+spark -submit test.py 4   - execute and pass param
+
+
+
