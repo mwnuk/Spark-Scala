@@ -113,7 +113,7 @@ Spark is moving away from RDD syntax to spark Data frames
 Dataframe is a Dataset organized into named columns
 import org.apache.spark.sql.SparkSession
 val spark = SparkSession.builder().getOrCreate()
-val df = spark.read.csv("..")
+val df = spark.read.csv("..") - file from a local computer
 val df = spark.read.option("header","true").option("inferSchema","true").csv("Sales.csv")
 df.head(5)
 df.columns
@@ -121,7 +121,7 @@ df.describe().show()  - min.max.stddev of all numerical columns
 df.select("Volume").show()
 df.select($"Date",$"Volume").show()  - multiple columns
 df.select(df("Date"),df("Volume").show()  - multiple columns
-val df2=df.withColumn("HighPlusLow",df("High)+df("Low"))  - creating new column
+val df2 = df.withColumn("HighPlusLow",df("High)+df("Low"))  - creating new column
 df3.printSchema()
 df2("HighPlusLow").as("HPL") - renaming the column
 
@@ -134,22 +134,27 @@ val CH_cnt = df.filter("Close>480 AND High >480").count()
              transformation-action pattern
 Pearson correlation
 df.select(corr("High","Low")).show()
-Latest hundreds of usefull functions:
-http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$
+
 
 AGGREGATION
 ___________________________________________________
+Latest hundreds of usefull functions:
+http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$
+
 import org.apache.spark.sql.SparkSession
 val spark = SparkSession.builder().getOrCreate()
 val df = spark.read.option("header","true").option("inferSchema","true").csv("Sales.csv")
 df.groupBy("Company").mean().show()   -- min,max,sum,etc
-df.select(sum("Sales")).show()  -- all Sales column; variance,stddev,curtosis,etc
+df.select(sum("Sales")).show()  -- all Sales column not groupped by Company; same variance,stddev,curtosis,etc
+
+df.orderBy("Sales").show()
+df.orderBy($"Sales".desc).show()
 
 MISSING DATA
 ___________________________________________________
 null - 3 options; 1.keep them, 2. Drop them 3. Fill them in 
 df.na.drop().show() -- pass integer, drop rows that have less then a min numbr of non-null values
-df.na.fill(100).show() -- fills only number columns with 100
+df.na.fill(100).show() -- fills only numeric columns with 100
 df.na.fill('New NAme",Array(("Name")).show() -- fills only NAme column
 
 
@@ -175,24 +180,5 @@ http:spark.apache.org/docs/latest/ml-guide.html
 Formatting means you convert all the columns of feature into a single column consisting of an array 
 of all those features
 
-next lecure is 47
 
 
-
-
-
-
-
-
-
-
-
-https://www.youtube.com/watch?v=HS8Cx-l9Vhg
-Spark SQL - Schema RDD, SQL with ODBC
-Spark Straming - 
-MLLib - Machine Learning lib
-GraphX - Graphical processing
-DAG: Direct Acyclic Graph
-Spark Context
-Transformations
-Actions

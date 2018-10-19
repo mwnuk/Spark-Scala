@@ -1,0 +1,20 @@
+FROM ZEPPELIN
+
+-- from Hive
+%livy2.spark
+val hiveContext = new org.apache.spark.sql.SparkSession.Builder().getOrCreate()
+val asd= hiveContext.sql("SELECT * FROM CUSTOMERS")
+asd.show()
+
+--------------------
+--from HDFS External file
+%livy2.spark
+import spark.implicits._  //for filters
+val hiveContext = new org.apache.spark.sql.SparkSession.Builder().getOrCreate()
+val df_csv= sparkSession.read.option("inferSchema","true").csv("hdfs://hdpprdnn/dev/lake/ice/files/myExternalFile")
+df_csv.filter("_c1='E0' ").show()
+
+----------------
+
+Spark Seaaion vs Spark Context - Context was usesed before ver 2.0
+----------------
