@@ -164,8 +164,9 @@ df.select(month(df("Date"))).show() -- pass the column you want to process
 
 val df2=df.withColumn("Year",year(df("Date")))) -- pass entire column, not just name
 val dfavg=df.groupBy("Year").mean()             -- mean or max for all columns
-dfavg.selec($"Year,$"avg(Close)").show()        -- weird, need to repead the function
+dfavg.selec($"Year,$"avg(Close)").show()        -- weird, need to repead the function after operation
 
+df.
 
 MACHINE LEARNING 
 ___________________________________________________

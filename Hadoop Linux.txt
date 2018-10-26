@@ -13,3 +13,12 @@ spark -submit test.py 4   - execute and pass param
 
 
 
+HDFS COMMANDS
+--------------------
+-CAT   - display file uncompressed
+-TEXT  - display file compressed
+-CHGRP,-CHMOD,-CHOWN  - change file permission
+-PUT,-GET,-COPYFROMLOCAL,-COPYTOLOCAL - copies files to hdfs
+-ls,-ls-R  - list files/directories
+-mv,-moveFromLocal,-moveToLocal - moves files
+-STAT - file statistics info

@@ -13,8 +13,68 @@ import spark.implicits._  //for filters
 val hiveContext = new org.apache.spark.sql.SparkSession.Builder().getOrCreate()
 val df_csv= sparkSession.read.option("inferSchema","true").csv("hdfs://hdpprdnn/dev/lake/ice/files/myExternalFile")
 df_csv.filter("_c1='E0' ").show()
+equivelent to:
+df_csv.where($"_c1"==="E0").show()
 
 ----------------
 
 Spark Seaaion vs Spark Context - Context was usesed before ver 2.0
 ----------------
+
+df_csv.groupBy("_c1").mean().show()   - avg for all columns, per _C1
+
+
+df_csv.groupBy("_c1").mean("_C7").show() - avg of one col per _C1
+df_csv.groupBy("_c1").agg(mean(col("_C7")).show() - samw
+
+
+
+-----------------------------------------------------------------------------------------------------
+-- INEQUALITY JOIN 
+-- Product price changeed in 2000, but still want to show all records 
+
+
+val products = sc.parallelize(Array(
+  ("steak", "1990-01-01", "2000-01-01", 150),
+  ("steak", "2000-01-02", "2020-01-01", 180),
+  ("fish", "1990-01-01", "2020-01-01", 100)
+)).toDF("name", "startDate", "endDate", "price")
+
+products.show()
++-----+----------+----------+-----+
+| name| startDate|   endDate|price|
++-----+----------+----------+-----+
+|steak|1990-01-01|2000-01-01|  150|
+|steak|2000-01-02|2020-01-01|  180|
+| fish|1990-01-01|2020-01-01|  100|
++-----+----------+----------+-----+
+
+
+val orders = sc.parallelize(Array(
+  ("1995-01-01", "steak"),
+  ("2000-01-01", "fish"),
+  ("2005-01-01", "steak")
+)).toDF("date", "product")
+
+orders.show()
+
++----------+-------+
+|      date|product|
++----------+-------+
+|1995-01-01|  steak|
+|2000-01-01|   fish|
+|2005-01-01|  steak|
++----------+-------+
+
+orders
+  .join(products, $"product" === $"name" && $"date" >= $"startDate" && $"date" <= $"endDate")
+  .show()
+
++----------+-------+-----+----------+----------+-----+
+|      date|product| name| startDate|   endDate|price|
++----------+-------+-----+----------+----------+-----+
+|2000-01-01|   fish| fish|1990-01-01|2020-01-01|  100|
+|1995-01-01|  steak|steak|1990-01-01|2000-01-01|  150|
+|2005-01-01|  steak|steak|2000-01-02|2020-01-01|  180|
++----------+-------+-----+----------+----------+-----+
+
