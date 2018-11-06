@@ -176,10 +176,16 @@ Two ML APIs:
 -DataFrame API
 
 good documentation at:
-http:spark.apache.org/docs/latest/ml-guide.html
+http//:spark.apache.org/docs/latest/ml-guide.html
+
+and Train-Test Split, and ParameterGridBuilder in: 
+http://spark.apache,org/docs/latest/ml-tuning.html  - 
 
 Formatting means you convert all the columns of feature into a single column consisting of an array 
 of all those features
 
-
-
+K-means CLustering - unsupervised - no labels
+Clustering creates labels- no validation
+ decide how many clusters-K(elbow method) , each point is assing randomly to a cluster, keep repeating
+more in:
+http://spark.apache,org/docs/latest/ml-clustering.html
