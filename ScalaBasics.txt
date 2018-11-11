@@ -157,24 +157,6 @@ http:spark.apache.org/docs/latest/ml-guide.html
 Formatting means you convert all the columns of feature into a single column consisting of an array 
 of all those features
 
-next lecure is 47
 
-
-
-
-
-
-
-
-
-
-
-https://www.youtube.com/watch?v=HS8Cx-l9Vhg
-Spark SQL - Schema RDD, SQL with ODBC
-Spark Straming - 
-MLLib - Machine Learning lib
-GraphX - Graphical processing
-DAG: Direct Acyclic Graph
-Spark Context
-Transformations
-Actions
+HORTONWORKS CERTIFIED DEVELOPER
+https://2xbbhjxc6wk3v21p62t8n4d4-wpengine.netdna-ssl.com/wp-content/uploads/2017/05/HDCD_Data_Sheet.pdf

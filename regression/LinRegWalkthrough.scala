@@ -6,23 +6,6 @@ import org.apache.spark.ml.tuning.{ParamGridBuilder, TrainValidationSplit}
 import org.apache.log4j._
 Logger.getLogger("org").setLevel(Level.ERROR)
 
-
-// Start a simple Spark Session
-import org.apache.spark.sql.SparkSession
-val spark = SparkSession.builder().getOrCreate()
-
-// Prepare training and test data.
-val data = spark.read.option("header","true").option("inferSchema","true").format("csv").load("USA_Housing.csv")
-
-// Check out the Data
-data.printSchema()
-
-// See an example of what the data looks like
-// by printing out a Row
-val colnames = data.columns
-val firstrow = data.head(1)(0)
-println("\n")
-println("Example Data Row")
 for(ind <- Range(1,colnames.length)){
   println(colnames(ind))
   println(firstrow(ind))
