@@ -1,0 +1,27 @@
+upload jar to hdfs
+ 
+putty to Edge node
+initialize Knox
+kint user@domain
+
+bash - gives more options
+
+hadoop fs -ls /user/mydir    -list files
+hadoop fs -get /user/mydir/mufile.py  -copy from hdfs to node
+hadoop fs -rm -r -f /tmp/mydir   -delete directory recursively and force it
+hadop fs -mkdir /tmp/mydir    - create directory
+hadoop fs -put /tmp/myfile /tmp/mydir   - upload to hdfs
+
+spark -submit test.py 4   - execute and pass param
+
+
+
+HDFS COMMANDS
+--------------------
+-CAT   - display file uncompressed
+-TEXT  - display file compressed
+-CHGRP,-CHMOD,-CHOWN  - change file permission
+-PUT,-GET,-COPYFROMLOCAL,-COPYTOLOCAL - copies files to hdfs
+-ls,-ls-R  - list files/directories
+-mv,-moveFromLocal,-moveToLocal - moves files
+-STAT - file statistics info

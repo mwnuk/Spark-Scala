@@ -36,19 +36,23 @@ filteredumbersRDD.count()
 filteredumbersRDD.first()
 filteredumbersRDD.take(2)
 
-LIST
+LIST (inmutable)
 ------------
 val events=List( 2,4,6,8,10,"a")
 events(0) returns 2
+evens.   returns all methods
 events.head
 myList=List(List(1,2,3),List(4,5,6))
-mylist.max, min,sum
+mylist.max, min,sum, slice, sorted
 events.drop(2)
 events.slice(3,2)
+myList.contains(3)
+myList contains 3   - two ways to get contain
 
 ARRAYS (mutable), lists are more popular
 ___________________________________________________
 val arr= Arry(1,2,3,"a")
+arr(1)  returns 2
 Array.range(0,10)
 Range(0,5)
 
@@ -59,16 +63,28 @@ val s = Set(1,2,3)
 val s=collectio.mutable.Set(1,2,3)
 s+=4
 s.max
+myList.toSet - casting to Set removes duplicates
 
 
 MAPS(  key-value pairs, like dictionary)
 ___________________________________________________
 val mymap = Map(("a",1),("b",2))
 mymap("a") - returns 1
-mymap get "a"  - same, but returns object
+mymap get "a"  - same, but returns object, none instead of Excp
 val mymutmap=collection.mutable.Map(("x",1),("y",2))
 mymutmap+=("newkey" -> 999)
 mymutmaps.keys
+Maps are iterable
+
+STRINGS
+___________________________________________________
+val name="Jose"
+printf("this is name %s, $name)
+val greet= s"Hello +$name   -use s or f 
+name.charAt(2)
+name slice(3,5)
+name maches "www"
+name contains ("se")
 
 
 FOR
@@ -76,6 +92,7 @@ ___________________________________________________
 for(item <- List(1,2,3)) { println(item)...}
 for(item <- Set(1,2,3)) { println(item)...}; --may not be in order
 for(item <- Range(0,10)) { println(item)...};
+while break as usual but needs to import util.control.Breaks.
 
 FUNCTIONS
 ___________________________________________________
@@ -85,6 +102,7 @@ def isPrime(numcheck:Int):Boolean = { for n<- Range(2,numcheck)){
 		return false
 	}}
 	return true}
+passing List:
 val numbers( = List(1,2,3,4)
 def check (num:List[Int]):List[Int]={return nums}
  
@@ -95,7 +113,7 @@ Spark is moving away from RDD syntax to spark Data frames
 Dataframe is a Dataset organized into named columns
 import org.apache.spark.sql.SparkSession
 val spark = SparkSession.builder().getOrCreate()
-val df = spark.read.csv("..")
+val df = spark.read.csv("..") - file from a local computer
 val df = spark.read.option("header","true").option("inferSchema","true").csv("Sales.csv")
 df.head(5)
 df.columns
@@ -103,7 +121,7 @@ df.describe().show()  - min.max.stddev of all numerical columns
 df.select("Volume").show()
 df.select($"Date",$"Volume").show()  - multiple columns
 df.select(df("Date"),df("Volume").show()  - multiple columns
-val df2=df.withColumn("HighPlusLow",df("High)+df("Low"))  - creating new column
+val df2 = df.withColumn("HighPlusLow",df("High)+df("Low"))  - creating new column
 df3.printSchema()
 df2("HighPlusLow").as("HPL") - renaming the column
 
@@ -112,26 +130,31 @@ import spark.implicits._
 df.filter($"Close">480 && $"High"<480).show()  - scala notation
 df.filter("Close>480 AND High >480").show()  - sql notation
 val CH_low = df.filter("Close>480 AND High >480").collect() - converts it array
-val CH_cnt = df.filter("Close>480 AND High >480").count()
+val CH_cnt = df.filter("Close>480 AND High >480").count()  
              transformation-action pattern
 Pearson correlation
 df.select(corr("High","Low")).show()
-Latest functions:
-http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$
+
 
 AGGREGATION
 ___________________________________________________
+Latest hundreds of usefull functions:
+http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$
+
 import org.apache.spark.sql.SparkSession
 val spark = SparkSession.builder().getOrCreate()
 val df = spark.read.option("header","true").option("inferSchema","true").csv("Sales.csv")
 df.groupBy("Company").mean().show()   -- min,max,sum,etc
-df.select(sum("Sales")).show()  -- all Sales column; variance,stddev,curtosis,etc
+df.select(sum("Sales")).show()  -- all Sales column not groupped by Company; same variance,stddev,curtosis,etc
+
+df.orderBy("Sales").show()
+df.orderBy($"Sales".desc).show()
 
 MISSING DATA
 ___________________________________________________
 null - 3 options; 1.keep them, 2. Drop them 3. Fill them in 
 df.na.drop().show() -- pass integer, drop rows that have less then a min numbr of non-null values
-df.na.fill(100).show() -- fills only number columns with 100
+df.na.fill(100).show() -- fills only numeric columns with 100
 df.na.fill('New NAme",Array(("Name")).show() -- fills only NAme column
 
 
@@ -141,8 +164,9 @@ df.select(month(df("Date"))).show() -- pass the column you want to process
 
 val df2=df.withColumn("Year",year(df("Date")))) -- pass entire column, not just name
 val dfavg=df.groupBy("Year").mean()             -- mean or max for all columns
-dfavg.selec($"Year,$"avg(Close)").show()        -- weird, need to repead the function
+dfavg.selec($"Year,$"avg(Close)").show()        -- weird, need to repead the function after operation
 
+df.
 
 MACHINE LEARNING 
 ___________________________________________________
@@ -152,11 +176,22 @@ Two ML APIs:
 -DataFrame API
 
 good documentation at:
-http:spark.apache.org/docs/latest/ml-guide.html
+http//:spark.apache.org/docs/latest/ml-guide.html
+
+and Train-Test Split, and ParameterGridBuilder in: 
+http://spark.apache,org/docs/latest/ml-tuning.html  - 
 
 Formatting means you convert all the columns of feature into a single column consisting of an array 
 of all those features
 
+<<<<<<< HEAD
 
 HORTONWORKS CERTIFIED DEVELOPER
 https://2xbbhjxc6wk3v21p62t8n4d4-wpengine.netdna-ssl.com/wp-content/uploads/2017/05/HDCD_Data_Sheet.pdf
+=======
+K-means CLustering - unsupervised - no labels
+Clustering creates labels- no validation
+ decide how many clusters-K(elbow method) , each point is assing randomly to a cluster, keep repeating
+more in:
+http://spark.apache,org/docs/latest/ml-clustering.html
+>>>>>>> 63751c7f7c2bdd9f97484e1db671f66d1494324f
