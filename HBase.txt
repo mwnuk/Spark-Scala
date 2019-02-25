@@ -15,7 +15,7 @@ REST Service with Python Client
      -  su root
      -  /usr/hdp/current/hbase-master/bin/hbase-deamon.sh start
                rest -p 8000 --infoport 8001
-3. Load file into hbase 
+3. Load file into hbase in python: 
 from starbase import Connection
 c=Connection("127.0.0.1","8000")
 ratings=c.table('ratings')
@@ -38,7 +38,32 @@ HBase Shell
  hbase shell   from unix
  list   to get list of existing tables
  create 'users','userinfo'   creates table with one column family
- 
+
+ status - Provides the status of HBase, for example, the number of servers.
+ version - Provides the version of HBase being used.
+ table_help - Provides help for table-reference commands.
+ whoami - Provides information about the user.
+ disable - Disables a table.
+ is_disabled - Verifies whether a table is disabled.
+ enable - Enables a table.
+ is_enabled - Verifies whether a table is enabled.
+ describe - Provides the description of a table.
+ alter - Alters a table.
+put - Puts a cell value at a specified column in a specified row in a particular table.
+  ex insert: put 'emp','1','professional data:salary','50000'
+  ex update: put 'emp','row1','personal:city','Delhi'
+get - Fetches the contents of row or a cell.
+  ex read row:  get 'emp', '1'
+  ex read cell:  get 'emp', 'row1', {COLUMN ? 'personal:name'}
+delete - Deletes a cell value in a table.  
+  ex delete cell: delete ‘<table name>’, ‘<row>’, ‘<column name >’, ‘<time stamp>’
+deleteall - Deletes all the cells in a given row.
+  ex: deleteall 'emp','1'
+scan - Scans and returns the table data.
+count - Counts and returns the number of rows in a table.
+truncate - Disables, drops, and recreates a specified table.
+hbase> alter ‘ table name ’, ‘delete’ ? ‘ column family ’ 
+
 -----------------------------------------------
 HBAse PIG integration
 -----------------------------------------------
@@ -71,6 +96,35 @@ before dropping table
 -----------------------------------------------
 HBase Hive integration 
 -----------------------------------------------
+CREATE TABLE foo(rowkey STRING, a STRING, b STRING)
+STORED BY ‘org.apache.hadoop.hive.hbase.HBaseStorageHandler’
+WITH SERDEPROPERTIES (‘hbase.columns.mapping’ = ‘:key,f:c1,f:c2’)
+TBLPROPERTIES (‘hbase.table.name’ = ‘bar’);
+
+
+-----------------------------------------------
+MySQL 
+-----------------------------------------------
+mySql -u root -p
+( -p prompts for password, default might be 'hadoop')
+you get mysql> prompt
+create database movies;
+show databases;
+SET NAMES 'utf8'
+SET characterset utf8;
+use movies;
+source movielens.sql;   --loads a script creating tables
+select * from movies limit 10;
+describe table;
+
+or
+CREATE TABLE movies(int INTEGER, title VARCHAR(255), releaseDate DATE);
+exit
+
+
+
+
+
 
 
 
