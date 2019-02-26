@@ -1,0 +1,79 @@
+_______________________________________________________________
+
+#connect to mysql
+_______________________________________________________________
+
+$ mysql -u root -p
+mysql> create database testDb;
+mysql> use testDb;
+
+mysql> create table student(id integer,name char(20));
+mysql> insert into student values(1,'Archana');
+mysql> insert into student values(2,'XYZ');
+mysql> describe student
+mysql> SELECT * from student
+mysql> exit;
+
+
+_______________________________________________________________
+SQOOP MYSQL
+_______________________________________________________________
+
+sqoop import --connect jdbc:mysql://localhost/databasename 
+--username $USER_NAME --password $PASSWORD$ --table tablename --m 1
+
+or
+sqoop import --connect jdbc:mysql://localhost/databasename --driver
+com.mysql.jdbc.Driver  --table tablename 
+
+or straight in to hive
+sqoop import --connect jdbc:mysql://localhost/databasename --driver
+com.mysql.jdbc.Driver  --table tablename --hive-import -m 1
+
+setup permission in MySQL:
+mysql> GRANT ALL PRIVILEGES ON databasename.* to ''@'localhost';
+
+back from Hive to SQL:
+files are in /apps/hive/warehouse/database
+make sure table exists in mysql(!)
+mysql> CREATE TABLE exported_movies(in INTEGER, title VARCHAR(255),releaseDate DATE);
+$sqoop export --connect jdbs:mysql://localhost/movielens -m 1 --driver
+com.mysql.jdbc.Driver --table exported_movies --export-dir /apps/hive/warehouse/movies
+ --input-fields-terminated-by '\0001'
+
+verify:
+mysql> use movielens
+mysql> select * from exported_movies limit 10;
+__________
+
+or create file  import.txt
+import
+--connect
+jdbc:mysql://localhost/testDb
+--username
+root
+--password
+hadoop123
+
+sqoop --options-file /home/hduser/import.txt --table student -m 1
+____________
+
+or import only specific columns
+$ sqoop import --connect jdbc:mysql://localhost/testDb --username root --password hadoop123 
+--table student --columns "name" -m 1
+
+________________________________________________________________
+SQOOP MYSQL TO HBASE
+________________________________________________________________
+one column family at a time!
+
+$ sqoop import 
+    --connect jdbc:mysql://localhost/serviceorderdb 
+    --username root -P 
+    --table customercontactinfo 
+    --columns "customernum,customername" 
+    --hbase-table customercontactinfo 
+    --column-family CustomerName 
+    --hbase-row-key customernum -m 1
+
+
