@@ -1,0 +1,62 @@
+Presto works with Works with Mongo, Cassandra, MySQL, HBase, Hive, etc
+
+http:/prestodb.io
+
+in Docs, deploying Presto, RightClick presto-server-0.0165.tar.gz and copy linkaddress
+in linux type: wget and right click to paste the link, will take a minute or so
+
+uncompress it: tar -xvf presto-server-0.165.tar.gz 
+
+cd presto-server-0.165
+ls
+
+no configuration under etc directory!!
+get some examples from:
+wget http://media.sundog-soft.com/hadoop/presto-hdp-config.tgz
+uncompress into etc directory:
+tar-xvf presto-hdp-config.tgz 
+if deploying to cluster makesure nodeid is unique
+
+download also command line interface
+copy link address to cmd, go liux and type
+cd bin
+wget right click to get jar and rename it:
+mv presto-cli-0.165-executable.jar presto
+make it executable:
+chmod +x presto
+cd.. and start server
+bin/launcher start 
+
+connect to it from a browser: 127.0.0.1:8090
+to get handsome Cluster Overview
+cli:
+bin/presto --server 127.0.0.1:8090 --catalog hive
+ex:
+show tables from default
+select * from default.ratings
+
+scl enable python27 bash 
+python -V
+connect to Cassandra:
+cqlsh --cqlversion="3.4.0"
+describe keyspaces
+describe tables
+vi cassandra.properties to enter connectors
+Join Hive and Cassandra:
+bin/launcher start to start presto
+bin/presto --server 127.0.0.1:8090 --catalog hive,cassandra
+show tables from cassandra.movies;
+Query two databases:
+select u.occupation, count(*) from hive.default.ratings r join cassandra.movies.users u
+on r.user_id= u.user_id group by u.occupation;
+
+
+
+
+
+
+
+
+
+
+
