@@ -77,3 +77,14 @@ $ sqoop import
     --hbase-row-key customernum -m 1
 
 
+________________________________________________________________
+SQOOP TERADATA TO HIVE
+________________________________________________________________
+
+sqoop import -Dhadoop.security.credential.provider.path=jceks://hdfs/user/xxx111526/xxx111526.jceks 
+--connect 'jdbc:teradata://teradata-qual.eh...com/DATABASE=DEV_DATA'  
+--connection-manager org.apache.sqoop.teradata.TeradataConnManager 
+--username m111526 --password-alias td1700.password 
+--table someTableName --target-dir /dev/lake/files/someTableName --num-mappers 36
+
+
