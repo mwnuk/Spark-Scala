@@ -49,6 +49,7 @@ show tables from cassandra.movies;
 Query two databases:
 select u.occupation, count(*) from hive.default.ratings r join cassandra.movies.users u
 on r.user_id= u.user_id group by u.occupation;
+bin/launcher stop
 
 
 
