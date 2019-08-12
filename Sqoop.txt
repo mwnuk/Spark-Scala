@@ -20,15 +20,19 @@ SQOOP MYSQL
 _______________________________________________________________
 
 sqoop import --connect jdbc:mysql://localhost/databasename 
---username $USER_NAME --password $PASSWORD$ --table tablename --m 1
+--username $USER_NAME 
+--password $PASSWORD$ 
+--table tablename --m 1
 
 or
-sqoop import --connect jdbc:mysql://localhost/databasename --driver
-com.mysql.jdbc.Driver  --table tablename 
+sqoop import --connect jdbc:mysql://localhost/databasename 
+--driver com.mysql.jdbc.Driver  
+--table tablename 
 
 or straight in to hive
-sqoop import --connect jdbc:mysql://localhost/databasename --driver
-com.mysql.jdbc.Driver  --table tablename --hive-import -m 1
+sqoop import --connect jdbc:mysql://localhost/databasename 
+--driver com.mysql.jdbc.Driver  
+--table tablename --hive-import -m 1
 
 setup permission in MySQL:
 mysql> GRANT ALL PRIVILEGES ON databasename.* to ''@'localhost';
@@ -48,12 +52,9 @@ __________
 
 or create file  import.txt
 import
---connect
-jdbc:mysql://localhost/testDb
---username
-root
---password
-hadoop123
+--connect jdbc:mysql://localhost/testDb
+--username root
+--password hadoop123
 
 sqoop --options-file /home/hduser/import.txt --table student -m 1
 ____________
@@ -84,7 +85,71 @@ ________________________________________________________________
 sqoop import -Dhadoop.security.credential.provider.path=jceks://hdfs/user/xxx111526/xxx111526.jceks 
 --connect 'jdbc:teradata://teradata-qual.eh...com/DATABASE=DEV_DATA'  
 --connection-manager org.apache.sqoop.teradata.TeradataConnManager 
---username m111526 --password-alias td1700.password 
+--username myname --password-alias td1700.password 
 --table someTableName --target-dir /dev/lake/files/someTableName --num-mappers 36
+
+
+
+
+---------------------------------------
+MORE EXAMPLES
+---------------------------------------
+
+sqoop import
+## IMPORT TO HADOOP
+--connect "jdbc:mysql://gateway/retal_db"
+--username root
+--password claudera
+--table orders
+--compress --compression-codec-snapy
+--target-dir /user/claudera/practice5/problem1/output 
+--null-non-string -1 --null-string "NA"
+--fileds-terminated-by "\t"
+--where "order_status='Complete'" 
+--as paraquetfile
+
+##EXPORT TO MYSQL
+sqoop export
+--connect "jdbc:mysql://gateway/retal_db"
+--username root
+--password claudera
+--table customer_exported
+--export-dir /user/claudera/practice5/problem2
+
+##IMPORT TO HADOOP SPECIFIC COLUMNS
+sqoop import
+--connect
+--username
+--password
+--table customers
+--target
+--fileds-terminated-by "\t" --lines-terminated-by '|'
+--where "customer_street like '%Plaza%'
+--columns "customer_id,customer_fname"
+--compress
+--compression-codec bzip2 
+--as avrodatafile
+
+#DIFFRENT COMPRESSIONS
+--compress
+--compression-codec gzip 
+--as parquerfile
+
+--compress 
+--compression-codec-snapy
+--as textfile
+
+## SQOP IMPORT TO METASTORE
+--connect
+--username
+--password
+--table products
+--fileds-terminated-by "^"
+--hive-import
+--create-hive-table
+--hive-database defaulf
+--hive-table product_sample -m 1
+
+
 
 
